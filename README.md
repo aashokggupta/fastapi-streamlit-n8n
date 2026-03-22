@@ -18,7 +18,7 @@ Access: **Open your browser to http://localhost:5678.**
 8) run predict_api.py and test fastapi
    **python -m uvicorn predict_api:app --reload**
    **http://localhost:8000/predict?marketing_spend=4000&season=3&region=4**  
-11) run dashboard.py and open streamlit
+11) **streamlit run ./dashboard.py** and open streamlit
     **http://localhost:8501/**
 12) Create workflow in n8n
     upload Sales Forecast AI Agent.json
