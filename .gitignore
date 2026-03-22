@@ -1,0 +1,6 @@
+**/mlruns/
+mlflow.db
+**/mlflow-pipeline/
+*.csv
+*.txt
+__pycache__
