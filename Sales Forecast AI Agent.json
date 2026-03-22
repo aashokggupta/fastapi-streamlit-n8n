@@ -1,0 +1,195 @@
+{
+  "name": "Sales Forecast AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "sales-agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a042d9f7-6e4c-418c-a4d1-f1f76ea7565e",
+      "name": "Sales Agent Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        80
+      ],
+      "webhookId": "7211e687-70ac-46b1-9d7a-dd7f97a014d9"
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/predict",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "marketing_spend",
+              "value": "3000"
+            },
+            {
+              "name": "season",
+              "value": "3"
+            },
+            {
+              "name": "region",
+              "value": "2"
+            },
+            {
+              "name": "model_type",
+              "value": "linear"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "78366094-9696-4d2c-9195-e50b21815692",
+      "name": "Call Prediction API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -160,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.predicted_sales}}",
+              "value2": 35000
+            }
+          ]
+        }
+      },
+      "id": "34eacb45-5e06-4105-a30c-755311777313",
+      "name": "Check Sales Threshold",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        96,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "132825c2-ea5c-46fe-aaf7-0005cf8356ca",
+      "name": "Low Sales Recommendation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1c26030a-ad8a-4b10-bc1a-3896d2afbe03",
+      "name": "High Sales Recommendation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        336,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "e63580dd-4cfb-4207-a499-9ef99595816c",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        592,
+        80
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Sales Agent Webhook": {
+      "main": [
+        [
+          {
+            "node": "Call Prediction API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Prediction API": {
+      "main": [
+        [
+          {
+            "node": "Check Sales Threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Sales Threshold": {
+      "main": [
+        [
+          {
+            "node": "Low Sales Recommendation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "High Sales Recommendation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low Sales Recommendation": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Sales Recommendation": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9b42f663-eb7f-4fc6-bd62-ad25b769046d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5afc6fc847fdcb67d79f52d1a6bf8185ca31b075785d08e9e30c5e20a410722b"
+  },
+  "id": "g0LRdB0l3FUoMl7T",
+  "tags": []
+}
